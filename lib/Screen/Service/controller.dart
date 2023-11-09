@@ -10,6 +10,7 @@ class HomeController extends GetxController {
   bool isRunning = false;
 
   startDataListner() async {
+    isRunning = true;
     final name = SerialPort.availablePorts.first;
     final port = SerialPort(name);
     if (!port.openReadWrite()) {
@@ -26,7 +27,10 @@ class HomeController extends GetxController {
   }
 
   UpdatePorts() {
+    PortList.clear();
+    PortList.add("Select Port");
     PortList = SerialPort.availablePorts;
+    PortList.add("Select Port");
     update();
   }
 
@@ -34,6 +38,6 @@ class HomeController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    PortList = SerialPort.availablePorts;
+    UpdatePorts();
   }
 }

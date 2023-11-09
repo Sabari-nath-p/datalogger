@@ -35,18 +35,24 @@ class _MainScreenState extends State<MainScreen> {
                           color: Colors.white),
                     ),
                   ),
-                  Container(
-                    width: 80,
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.only(right: 10),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white.withOpacity(.9)),
-                    child: Text(
-                      "Start",
-                      style: GoogleFonts.lato(
-                          fontSize: 14, color: Color(0xff191F26)),
+                  InkWell(
+                    onTap: () {
+                      ctrl.startDataListner();
+                    },
+                    child: Container(
+                      width: 80,
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(right: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white.withOpacity(.9)),
+                      child: Text(
+                        "Start",
+                        style: GoogleFonts.lato(
+                            fontSize: 14, color: Color(0xff191F26)),
+                      ),
                     ),
                   ),
                   Container(
@@ -136,17 +142,24 @@ class _MainScreenState extends State<MainScreen> {
                   SizedBox(
                       width: 100,
                       child: DropdownButton<String>(
-                        value: ctrl.portController,
+                        value: (ctrl.PortList.isEmpty)
+                            ? null
+                            : ctrl.portController,
                         dropdownColor: Color(0xff191F26),
                         items:
                             ctrl.PortList.map((e) => DropdownMenuItem<String>(
                                   value: e,
-                                  child: Text(
-                                    e,
-                                    style: GoogleFonts.lato(
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.white,
-                                        fontSize: 14),
+                                  child: SizedBox(
+                                    width: 76,
+                                    height: 14,
+                                    child: Text(
+                                      e,
+                                      maxLines: 1,
+                                      style: GoogleFonts.lato(
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.white,
+                                          fontSize: 14),
+                                    ),
                                   ),
                                 )).toList(),
                         underline: Container(),
