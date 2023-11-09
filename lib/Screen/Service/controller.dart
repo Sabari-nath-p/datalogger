@@ -8,19 +8,21 @@ class HomeController extends GetxController {
   String portController = "Select Port";
   String TimeMode = "Second";
   bool isRunning = false;
+  SerialPort? port;
 
   startDataListner() async {
     isRunning = true;
-    final name = SerialPort.availablePorts.first;
-    final port = SerialPort(name);
-    if (!port.openReadWrite()) {
+    update();
+
+    port = SerialPort(portController);
+    if (!port!.openReadWrite()) {
       print(SerialPort.lastError);
       //exit(-1);
     }
 
     //port.write(/* ... */);
 
-    final reader = SerialPortReader(port);
+    final reader = SerialPortReader(port!);
     reader.stream.listen((data) {
       print('received: $data');
     });

@@ -49,7 +49,7 @@ class _MainScreenState extends State<MainScreen> {
                           borderRadius: BorderRadius.circular(5),
                           color: Colors.white.withOpacity(.9)),
                       child: Text(
-                        "Start",
+                        (ctrl.isRunning) ? "Stop" : "Start",
                         style: GoogleFonts.lato(
                             fontSize: 14, color: Color(0xff191F26)),
                       ),
