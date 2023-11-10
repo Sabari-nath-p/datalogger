@@ -1,11 +1,14 @@
+import 'package:data_logger/Screen/Service/controller.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
 class PloterTableView extends StatelessWidget {
   PloterTableView({super.key});
-
+  HomeController ctrl = Get.put(HomeController());
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -111,60 +114,61 @@ class PloterTableView extends StatelessWidget {
                 numeric: true,
               ),
             ],
-            rows: List<DataRow>.generate(
-                100,
-                (index) => DataRow(cells: [
-                      DataCell(Container(
-                          alignment: Alignment.center,
-                          width: 7.w,
-                          child: Text(index.toString()))),
-                      DataCell(Container(
-                        padding: EdgeInsets.only(left: 5),
-                        alignment: Alignment.center,
-                        width: 25.w,
-                        child: Text(
-                          DateTime.now().toString(),
-                          style: GoogleFonts.inter(fontSize: 14),
-                          textAlign: TextAlign.center,
-                        ),
-                      )),
-                      DataCell(Container(
-                        alignment: Alignment.center,
-                        width: 8.w,
-                        child: Text(
-                          "1.45",
-                          style: GoogleFonts.inter(fontSize: 14),
-                          textAlign: TextAlign.center,
-                        ),
-                      )),
-                      DataCell(Container(
-                        alignment: Alignment.center,
-                        width: 12.w,
-                        child: Text(
-                          "1.45",
-                          style: GoogleFonts.inter(fontSize: 14),
-                          textAlign: TextAlign.center,
-                        ),
-                      )),
-                      DataCell(Container(
-                        alignment: Alignment.center,
-                        width: 15.w,
-                        child: Text(
-                          "1.45",
-                          style: GoogleFonts.inter(fontSize: 14),
-                          textAlign: TextAlign.center,
-                        ),
-                      )),
-                      DataCell(Container(
-                        alignment: Alignment.center,
-                        width: 14.w,
-                        child: Text(
-                          "1.45",
-                          style: GoogleFonts.inter(fontSize: 14),
-                          textAlign: TextAlign.center,
-                        ),
-                      ))
-                    ]))),
+            rows: [
+              for (var data in ctrl.MachineData.reversed)
+                DataRow(cells: [
+                  DataCell(Container(
+                      alignment: Alignment.center,
+                      width: 7.w,
+                      child: Text(ctrl.MachineData.indexOf(data).toString()))),
+                  DataCell(Container(
+                    padding: EdgeInsets.only(left: 5),
+                    alignment: Alignment.center,
+                    width: 25.w,
+                    child: Text(
+                      data.timeStamp!,
+                      style: GoogleFonts.inter(fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  )),
+                  DataCell(Container(
+                    alignment: Alignment.center,
+                    width: 8.w,
+                    child: Text(
+                      data.ph!,
+                      style: GoogleFonts.inter(fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  )),
+                  DataCell(Container(
+                    alignment: Alignment.center,
+                    width: 12.w,
+                    child: Text(
+                      data.Dh!,
+                      style: GoogleFonts.inter(fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  )),
+                  DataCell(Container(
+                    alignment: Alignment.center,
+                    width: 15.w,
+                    child: Text(
+                      data.temp!,
+                      style: GoogleFonts.inter(fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  )),
+                  DataCell(Container(
+                    alignment: Alignment.center,
+                    width: 14.w,
+                    child: Text(
+                      data.pressure!,
+                      style: GoogleFonts.inter(fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  ))
+                ])
+            ]),
       ),
     );
   }

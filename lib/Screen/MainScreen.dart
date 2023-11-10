@@ -37,7 +37,10 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      ctrl.startDataListner();
+                      if (!ctrl.isRunning)
+                        ctrl.startDataListner();
+                      else
+                        ctrl.StopListner();
                     },
                     child: Container(
                       width: 80,

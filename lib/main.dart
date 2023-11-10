@@ -1,4 +1,4 @@
-import 'package:crlibserialport/crlibserialport.dart';
+//import 'package:crlibserialport/crlibserialport.dart';
 import 'package:data_logger/Screen/MainScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -37,17 +37,17 @@ class _MyWidgetState extends State<MyWidget> {
       body: Align(
         child: InkWell(
             onTap: () async {
-              var ports = SerialPort.availablePorts;
-              print(ports);
-              //  if ()    reader.close();
-              //SerialPort serialPort =
-              //     SerialPort('/dev/ttyUSB0', baudrate: Baudrate.b9600);
-              // final reader = SerialPortReader(
-              //     SerialPort("/dev/cu.usbmodem111401").openRead());
+              //  var ports = SerialPort.availablePorts;
+              // print(ports);
+              // //  if ()    reader.close();
+              // //SerialPort serialPort =
+              // //     SerialPort('/dev/ttyUSB0', baudrate: Baudrate.b9600);
+              // // final reader = SerialPortReader(
+              // //     SerialPort("/dev/cu.usbmodem111401").openRead());
 
-              // reader.stream.listen((data) {
-              //   print(data);
-              // });
+              // // reader.stream.listen((data) {
+              // //   print(data);
+              // // });
             },
             child: Text("Font Size")),
       ),
