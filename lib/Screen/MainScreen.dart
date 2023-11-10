@@ -98,6 +98,18 @@ class _MainScreenState extends State<MainScreen> {
               color: Color(0xff191F26),
               child: Row(
                 children: [
+                  InkWell(
+                    onTap: () {
+                      ctrl.clearData();
+                    },
+                    child: Text(
+                      "   Clear Data",
+                      style: GoogleFonts.lato(
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                          fontSize: 14),
+                    ),
+                  ),
                   Expanded(child: Container()),
                   Container(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -160,7 +172,7 @@ class _MainScreenState extends State<MainScreen> {
                                   value: e,
                                   child: SizedBox(
                                     width: 76,
-                                    height: 14,
+                                    height: 20,
                                     child: Text(
                                       e,
                                       maxLines: 1,

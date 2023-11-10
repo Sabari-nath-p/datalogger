@@ -34,7 +34,7 @@ class HomeController extends GetxController {
       port!.open();
       //  port?.openWithSettings(BaudRate: 9600);
 
-      String buffer = "*${IntervelController.text}#$TimeMode@";
+      String buffer = "*${IntervelController.text}#${TimeMode[0]}@";
       port?.writeBytesFromString(buffer);
       String s = "";
       int opt = 0;
@@ -150,5 +150,12 @@ class HomeController extends GetxController {
 //});
 
     //print("Excel file exported to: $excelFilePath");
+  }
+
+  clearData() async {
+    await db!.deleteFromDisk();
+    MachineData.clear();
+    update();
+    openDatabase();
   }
 }
