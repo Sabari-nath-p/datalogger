@@ -1,10 +1,17 @@
 //import 'package:crlibserialport/crlibserialport.dart';
+
 import 'package:data_logger/Screen/MainScreen.dart';
+import 'package:data_logger/Screen/Model/dataModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sizer/sizer.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  if (!Hive.isAdapterRegistered(0)) {
+    Hive.registerAdapter(MDataAdapter());
+  }
   runApp(const MyApp());
 }
 

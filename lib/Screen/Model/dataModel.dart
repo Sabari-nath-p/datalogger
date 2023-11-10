@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+part 'dataModel.g.dart';
 
 @HiveType(typeId: 0)
 class MData {
