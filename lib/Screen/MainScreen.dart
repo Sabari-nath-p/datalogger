@@ -58,16 +58,22 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(right: 10),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white.withOpacity(.9)),
-                    child: Text(
-                      "Export Data",
-                      style: GoogleFonts.lato(
-                          fontSize: 14, color: Color(0xff191F26)),
+                  InkWell(
+                    onTap: () {
+                      ctrl.exportToExcel();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white.withOpacity(.9)),
+                      child: Text(
+                        "Export Data",
+                        style: GoogleFonts.lato(
+                            fontSize: 14, color: Color(0xff191F26)),
+                      ),
                     ),
                   )
                 ],

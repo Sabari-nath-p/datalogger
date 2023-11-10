@@ -21,20 +21,16 @@ class HomeController extends GetxController {
   List<MData> MachineData = [];
 
   startDataListner() async {
-    // port = SerialPort(portController,
-    //     openNow: true,
-    //     ByteSize: 8,
-    //     ReadIntervalTimeout: 1,
-    //     ReadTotalTimeoutConstant: 2);
-    if (false) {
+    port = SerialPort(portController,
+        openNow: false,
+        ByteSize: 8,
+        ReadIntervalTimeout: 1,
+        ReadTotalTimeoutConstant: 2);
+    // print(port!.openStatus);
+    if (port!.isOpened || true) {
       isRunning = true;
       update();
 
-      port = SerialPort(portController,
-          openNow: true,
-          ByteSize: 8,
-          ReadIntervalTimeout: 1,
-          ReadTotalTimeoutConstant: 2);
       port!.open();
       //  port?.openWithSettings(BaudRate: 9600);
 
@@ -134,8 +130,21 @@ class HomeController extends GetxController {
     }
 
     Directory? documentsDirectory = await getDownloadsDirectory();
+    print(documentsDirectory!.path);
+// when you are in flutter web then save() downloads the excel file.
 
-    // String excelFilePath = "${documentsDirectory!.path}/data_export.xlsx";
+// Call function save() to download the file
+    var fileBytes = excel.save();
+    var directory = await getApplicationDocumentsDirectory();
+
+    String excelFilePath = "${documentsDirectory!.path}\\data_export.xlsx";
+    File file = File(excelFilePath);
+    await file.writeAsBytes(excel.encode()!);
+    print(excel.encode());
+    print(file.path);
+    FlutterPlatformAlert.showAlert(
+        windowTitle: "File Exported",
+        text: "Your exported file is save in ${file.path} ");
     // excel.encode()?.then((onValue) {
     //   File(excelFilePath).writeAsBytesSync(onValue);
 //});
