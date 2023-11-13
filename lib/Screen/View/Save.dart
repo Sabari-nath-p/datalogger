@@ -1,5 +1,8 @@
+import 'package:data_logger/Screen/Service/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class SaveDialog extends StatefulWidget {
   @override
@@ -9,7 +12,7 @@ class SaveDialog extends StatefulWidget {
 class _SaveDialogState extends State<SaveDialog> {
   TextEditingController _filePathController = TextEditingController();
   TextEditingController _fileNameController = TextEditingController();
-
+  final HomeController ctrl = Get.put(HomeController());
   void _selectSaveLocation() async {
     final result = await FilePicker.platform.getDirectoryPath();
 
@@ -72,6 +75,7 @@ class _SaveDialogState extends State<SaveDialog> {
 
                   if (filePath.isNotEmpty && fileName.isNotEmpty) {
                     String completePath = '$filePath/$fileName';
+                    ctrl.exportToExcel(filePath, fileName);
                     print('File saved to: $completePath');
                   } else {
                     print('Please enter both file path and name.');

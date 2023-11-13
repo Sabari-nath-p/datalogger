@@ -1,5 +1,6 @@
 import 'package:data_logger/Screen/Service/controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -147,6 +148,7 @@ class DataView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6)),
                         width: 110,
                         child: TextField(
+                          enabled: !ctrl.isRunning,
                           controller: ctrl.IntervelController,
                           style: GoogleFonts.lato(
                               color: Colors.black, fontSize: 15),
@@ -209,9 +211,14 @@ class DataView extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  if (!ctrl.isRunning)
+                  if (!ctrl.isRunning &&
+                      ctrl.IntervelController.text.isNotEmpty)
                     ctrl.startDataListner();
-                  else
+                  else if (ctrl.IntervelController.text.isEmpty) {
+                    FlutterPlatformAlert.showAlert(
+                        windowTitle: "Couldn't Connect",
+                        text: "Please enter intervel");
+                  } else
                     ctrl.StopListner();
                 },
                 child: Container(
@@ -242,30 +249,37 @@ class DataView extends StatelessWidget {
   Widget _buildDateSelector(String label, String date) {
     return InkWell(
       onTap: () async {
-        final selectedDate = await showDatePicker(
-          context: Get.context!,
-          initialDate: DateTime.now(),
-          firstDate: DateTime.parse("2023-11-10"),
-          lastDate: DateTime.parse("2050-11-10"),
-        );
-
-        final selectedTime = await showTimePicker(
-          context: Get.context!,
-          initialTime: TimeOfDay.now(),
-        );
-
-        if (selectedDate != null && selectedTime != null) {
-          DateTime combinedDateTime = DateTime(
-            selectedDate.year,
-            selectedDate.month,
-            selectedDate.day,
-            selectedTime.hour,
-            selectedTime.minute,
+        if (!ctrl.isRunning) {
+          final selectedDate = await showDatePicker(
+            context: Get.context!,
+            initialDate: DateTime.now(),
+            firstDate: DateTime.parse("2023-11-10"),
+            lastDate: DateTime.parse("2050-11-10"),
           );
 
-          ctrl.FutureData = combinedDateTime.toString();
+          final selectedTime = await showTimePicker(
+            context: Get.context!,
+            initialTime: TimeOfDay.now(),
+          );
 
-          ctrl.update();
+          if (selectedDate != null && selectedTime != null) {
+            DateTime combinedDateTime = DateTime(
+              selectedDate.year,
+              selectedDate.month,
+              selectedDate.day,
+              selectedTime.hour,
+              selectedTime.minute,
+            );
+
+            ctrl.FutureData = combinedDateTime.toString();
+
+            ctrl.update();
+          }
+        }
+        {
+          FlutterPlatformAlert.showAlert(
+              windowTitle: "Couldn't Edit",
+              text: "Could'n edit while in live mode");
         }
       },
       child: Container(

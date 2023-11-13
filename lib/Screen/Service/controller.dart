@@ -37,13 +37,13 @@ class HomeController extends GetxController {
   List<MData> MachineData = [];
 
   startDataListner() async {
-    port = SerialPort(portController,
-        openNow: false,
-        ByteSize: 8,
-        ReadIntervalTimeout: 1,
-        ReadTotalTimeoutConstant: 2);
     // print(port!.openStatus);
-    if (port!.isOpened || true) {
+    if (portController != "Select Port") {
+      port = SerialPort(portController,
+          openNow: false,
+          ByteSize: 8,
+          ReadIntervalTimeout: 1,
+          ReadTotalTimeoutConstant: 2);
       isRunning = true;
       update();
 
@@ -69,32 +69,53 @@ class HomeController extends GetxController {
           s = s.replaceAll("*", "");
           s = s.replaceAll("@", "");
           s = s.replaceAll(" ", "");
+          s = s.replaceAll("\n", "");
           print(s);
           List value = s.split("#");
+          ph = value[0];
+          Dh = value[1];
+          tm = value[1];
+          p = value[3];
+
           MData mData = MData(value[1], value[2], value[0], value[3],
               DateTime.now().toString());
           if (checkSavable()) {
+            print(lastSaveTime.toString());
+            print(DateTime.now());
             lastSaveTime = DateTime.now();
-            MachineData.add(mData);
+            //MachineData.add(mData);
             db!.put(mData.timeStamp, mData);
-            update();
           }
+          update();
           opt = 0;
         }
       });
     } else {
       //custom api
       FlutterPlatformAlert.showAlert(
-          windowTitle: "Couldn't Connect",
-          text: "Port is not open to communication");
+          windowTitle: "Couldn't Connect", text: "Please Select Port");
     }
 // or
 // can only choose one function}
   }
 
   bool checkSavable() {
-    if (DateTime.now().isAfter(DateTime.parse(FutureData)) ||
-        FutureData == "-- :-- :--") {
+    if (FutureData == "-- :-- :--") {
+      if (DateTime.now().isAfter(lastSaveTime
+              .add(Duration(seconds: int.parse(IntervelController.text)))) &&
+          TimeMode == "Second") {
+        return true;
+      } else if (DateTime.now().isAfter(lastSaveTime
+              .add(Duration(minutes: int.parse(IntervelController.text)))) &&
+          TimeMode == "Minute") {
+        return true;
+      } else if (DateTime.now().isAfter(lastSaveTime
+              .add(Duration(hours: int.parse(IntervelController.text)))) &&
+          TimeMode == "Hour") {
+        return true;
+      } else
+        return false;
+    } else if (DateTime.now().isAfter(DateTime.parse(FutureData))) {
       if (DateTime.now().isAfter(lastSaveTime
               .add(Duration(seconds: int.parse(IntervelController.text)))) &&
           TimeMode == "Second") {
@@ -110,20 +131,7 @@ class HomeController extends GetxController {
       } else
         return false;
     } else {
-      if (DateTime.now().isAfter(lastSaveTime
-              .add(Duration(seconds: int.parse(IntervelController.text)))) &&
-          TimeMode == "Second") {
-        return true;
-      } else if (DateTime.now().isAfter(lastSaveTime
-              .add(Duration(minutes: int.parse(IntervelController.text)))) &&
-          TimeMode == "Minute") {
-        return true;
-      } else if (DateTime.now().isAfter(lastSaveTime
-              .add(Duration(hours: int.parse(IntervelController.text)))) &&
-          TimeMode == "Hour") {
-        return true;
-      } else
-        return false;
+      return false;
     }
   }
 
@@ -155,10 +163,10 @@ class HomeController extends GetxController {
   openDatabase() async {
     MachineData.clear();
     db = await Hive.openBox<MData>("COLLECTION");
-    for (var data in db!.keys) {
-      MData? dt = db!.get(data);
-      MachineData.add(dt!);
-    }
+    // for (var data in db!.keys) {
+    //   MData? dt = db!.get(data);
+    //   MachineData.add(dt!);
+    // }
     update();
   }
 
