@@ -49,7 +49,7 @@ class HomeController extends GetxController {
           opt = 1;
         }
         s = s + res;
-        if (s.contains("@") && opt == 1) {
+        if (res.contains("@") && opt == 1) {
           s = s.replaceAll("*", "");
           s = s.replaceAll("@", "");
           s = s.replaceAll(" ", "");
