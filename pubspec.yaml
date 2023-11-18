@@ -27,6 +27,19 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
+
+
+
+
+icons_launcher:
+  image_path: "assets/logo.png"
+  platforms:
+    windows:
+      enable: true
+  
+
+
+
 dependencies:
   flutter:
     sdk: flutter
@@ -49,6 +62,7 @@ dependencies:
   date_time_picker: ^2.1.0
   filesystem_picker: ^4.0.0
   file_picker: ^6.1.1
+ 
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +74,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  icons_launcher: ^2.1.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -73,8 +88,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/logo.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

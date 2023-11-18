@@ -115,7 +115,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildModeButton(String text, int mode) {
     return InkWell(
       onTap: () {
-        if (!ctrl.isRunning) {
+        if (!ctrl.isSave) {
           ctrl.Mode = mode;
           ctrl.update();
         }
@@ -161,12 +161,13 @@ class _MainScreenState extends State<MainScreen> {
               ),
             )).toList(),
         underline: Container(),
-        onChanged: ctrl.isRunning
-            ? null
-            : (value) {
-                ctrl.portController = value!;
-                ctrl.update();
-              },
+        onChanged: (value) {
+          if (ctrl.isRunning) ctrl.port!.close();
+          ctrl.portController = value!;
+          ctrl.update();
+
+          ctrl.startDataListner();
+        },
       ),
     );
   }

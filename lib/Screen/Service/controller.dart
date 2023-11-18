@@ -31,6 +31,7 @@ class HomeController extends GetxController {
   TextEditingController filePathController = TextEditingController();
   TextEditingController fileNameController = TextEditingController();
   DateTime lastSaveTime = DateTime.now();
+  bool isSave = false;
 
   SerialPort? port;
   Box<MData>? db;
@@ -38,62 +39,95 @@ class HomeController extends GetxController {
 
   startDataListner() async {
     // print(port!.openStatus);
-    if (portController != "Select Port") {
-      port = SerialPort(portController,
-          openNow: false,
-          ByteSize: 8,
-          ReadIntervalTimeout: 1,
-          ReadTotalTimeoutConstant: 2);
-      isRunning = true;
-      update();
+    try {
+      if (portController != "Select Port") {
+        port = SerialPort(portController,
+            openNow: false,
+            ByteSize: 8,
+            ReadIntervalTimeout: 1,
+            ReadTotalTimeoutConstant: 2);
+        isRunning = true;
+        update();
 
-      port!.open();
-      //  port?.openWithSettings(BaudRate: 9600);
+        port!.open();
+        //  port?.openWithSettings(BaudRate: 9600);
 
-      String buffer = "*${IntervelController.text}#${TimeMode[0]}@";
-      port?.writeBytesFromString(buffer);
-      String s = "";
-      int opt = 0;
-      port!.readBytesSize = 8;
-      print("reading data");
-      port!.readBytesOnListen(64, (value) {
-        String res = String.fromCharCodes(value);
-        //print(res);
+        String buffer = "*${IntervelController.text}#${TimeMode[0]}@";
+        port?.writeBytesFromString(buffer);
+        String s = "";
+        String updates = "";
+        int opt = 0;
+        List backup = [""];
+        port!.readBytesSize = 8;
+        print("reading data");
+        port!.readBytesOnListen(64, (value) {
+          String res = String.fromCharCodes(value);
+          //pr9int(res);
 
-        if (res.contains("*") && opt == 0) {
-          s = "";
-          opt = 1;
-        }
-        s = s + res;
-        if (res.contains("@") && opt == 1) {
-          s = s.replaceAll("*", "");
-          s = s.replaceAll("@", "");
-          s = s.replaceAll(" ", "");
-          s = s.replaceAll("\n", "");
-          print(s);
-          List value = s.split("#");
-          ph = value[0];
-          Dh = value[1];
-          tm = value[1];
-          p = value[3];
+          if (s.contains("*") && opt == 0) {
+            //  print(s);
 
-          MData mData = MData(value[1], value[2], value[0], value[3],
-              DateTime.now().toString());
-          if (checkSavable()) {
-            print(lastSaveTime.toString());
-            print(DateTime.now());
-            lastSaveTime = DateTime.now();
-            //MachineData.add(mData);
-            db!.put(mData.timeStamp, mData);
+            opt = 1;
           }
-          update();
-          opt = 0;
-        }
-      });
-    } else {
-      //custom api
+          s = s + res;
+          // print("value String");
+          String check = s;
+          // print(s);
+
+          if (s.contains("@") && opt == 1) {
+            print(s);
+            int pos = s.lastIndexOf("@");
+
+            if (pos != -1 && pos < s.length - 1) {
+              print("Actual String");
+              print(s);
+              print("break String");
+              check = s.substring(0, pos - 1);
+              print(check);
+              print("break update");
+
+              updates = s.substring(pos + 1);
+              print(updates);
+            }
+            check = check.replaceAll("*", "");
+            check = check.replaceAll("@", "");
+            check = check.replaceAll(" ", "");
+            check = check.replaceAll("\n", "");
+
+            //  print(s);
+            List value = check.split("#");
+
+            if (value.length > 1) ph = value[0];
+            if (value.length > 2) Dh = value[1];
+            if (value.length > 3) tm = value[2];
+            if (value.length > 3) p = value[3];
+            if (value.length > 4) {
+              MData mData = MData(value[1], value[2], value[0], value[3],
+                  DateTime.now().toString());
+              if (isSave) if (checkSavable()) {
+                //print(lastSaveTime.toString());
+                //  print(DateTime.now());
+                lastSaveTime = DateTime.now();
+                //MachineData.add(mData);
+                db!.put(mData.timeStamp, mData);
+              }
+            }
+            print("updateString");
+            print(updates);
+            s = updates;
+            update();
+
+            opt = 0;
+          }
+        });
+      } else {
+        //custom api
+        FlutterPlatformAlert.showAlert(
+            windowTitle: "Couldn't Connect", text: "Please Select Port");
+      }
+    } catch (e) {
       FlutterPlatformAlert.showAlert(
-          windowTitle: "Couldn't Connect", text: "Please Select Port");
+          windowTitle: "Couldn't Connect", text: "port is busy");
     }
 // or
 // can only choose one function}

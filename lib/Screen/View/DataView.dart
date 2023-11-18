@@ -13,7 +13,7 @@ class DataView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+        margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
         padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 6.h),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5), color: Colors.white),
@@ -21,6 +21,14 @@ class DataView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Text(
+                "Realtime Data Ploting",
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500, fontSize: 22),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               Wrap(
                 spacing: 10,
                 runSpacing: 8,
@@ -148,7 +156,7 @@ class DataView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6)),
                         width: 110,
                         child: TextField(
-                          enabled: !ctrl.isRunning,
+                          enabled: !ctrl.isSave,
                           controller: ctrl.IntervelController,
                           style: GoogleFonts.lato(
                               color: Colors.black, fontSize: 15),
@@ -171,7 +179,7 @@ class DataView extends StatelessWidget {
                     Container(
                         width: 75,
                         child: DropdownButton<String>(
-                          value: (ctrl.isRunning) ? null : ctrl.TimeMode,
+                          value: (ctrl.isSave) ? null : ctrl.TimeMode,
                           //  dropdownColor: Colors.white60,
                           isExpanded: false,
                           items: ["Minute", "Second", "Hour"]
@@ -207,19 +215,29 @@ class DataView extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   _buildDateSelector("Start Date", ctrl.FutureData),
+                  if (!ctrl.isSave)
+                    InkWell(
+                        onTap: () {
+                          ctrl.FutureData = "";
+                          ctrl.update();
+                        },
+                        child: Icon(Icons.clear_sharp))
                 ],
               ),
               InkWell(
                 onTap: () {
-                  if (!ctrl.isRunning &&
-                      ctrl.IntervelController.text.isNotEmpty)
-                    ctrl.startDataListner();
-                  else if (ctrl.IntervelController.text.isEmpty) {
+                  if (!ctrl.isSave && ctrl.IntervelController.text.isNotEmpty) {
+                    ctrl.isSave = true;
+
+                    ctrl.update();
+                  } else if (ctrl.IntervelController.text.isEmpty) {
                     FlutterPlatformAlert.showAlert(
                         windowTitle: "Couldn't Connect",
                         text: "Please enter intervel");
-                  } else
-                    ctrl.StopListner();
+                  } else {
+                    ctrl.isSave = false;
+                    ctrl.update();
+                  }
                 },
                 child: Container(
                   width: 160,
@@ -231,7 +249,7 @@ class DataView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5),
                       color: Color(0xff191F26)),
                   child: Text(
-                    (ctrl.isRunning) ? "Stop" : "Start",
+                    (ctrl.isSave) ? "Stop" : "Start",
                     style: GoogleFonts.poppins(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -249,7 +267,7 @@ class DataView extends StatelessWidget {
   Widget _buildDateSelector(String label, String date) {
     return InkWell(
       onTap: () async {
-        if (!ctrl.isRunning) {
+        if (!ctrl.isSave) {
           final selectedDate = await showDatePicker(
             context: Get.context!,
             initialDate: DateTime.now(),
@@ -275,8 +293,7 @@ class DataView extends StatelessWidget {
 
             ctrl.update();
           }
-        }
-        {
+        } else {
           FlutterPlatformAlert.showAlert(
               windowTitle: "Couldn't Edit",
               text: "Could'n edit while in live mode");
